@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>swagcoder — Rishav Chatterjee</title>
+  <meta name="description" content="Rishav Chatterjee — Full‑Stack & GenAI engineer. Clean UI, real‑world impact, and a little bit of swagger." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200..900&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+  <!-- Tailwind via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'ui-sans-serif', 'Segoe UI', 'Roboto', 'Helvetica', 'Arial'],
+            display: ['Space Grotesk', 'system-ui', 'ui-sans-serif']
+          },
+          colors: {
+            brand: {
+              50: '#f5faff',
+              100: '#e6f0ff',
+              200: '#cfe0ff',
+              300: '#a6c2ff',
+              400: '#7aa2ff',
+              500: '#4f82ff',
+              600: '#2f62f4',
+              700: '#234bcc',
+              800: '#1b3aa3',
+              900: '#102266'
+            }
+          },
+          boxShadow: {
+            glow: '0 0 30px rgba(79,130,255,0.35)',
+            soft: '0 10px 40px rgba(0,0,0,0.16)'
+          },
+          animation: {
+            'spin-slow': 'spin 12s linear infinite',
+            'pulse-slow': 'pulse 4s ease-in-out infinite',
+            'float': 'float 8s ease-in-out infinite'
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-12px)' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <!-- Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <style>
+    :root { color-scheme: dark; }
+    html, body { background: #030712; }
+    .glass { backdrop-filter: blur(12px); background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04)); border: 1px solid rgba(255,255,255,.08); }
+    .card-3d { transform-style: preserve-3d; perspective: 1200px; }
+    .tilt { transform: rotateX(var(--rx,0)) rotateY(var(--ry,0)); transition: transform .2s ease; }
+    .gridline {
+      background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.08) 1px, transparent 0);
+      background-size: 20px 20px;
+      mask-image: radial-gradient(ellipse at center, rgba(0,0,0,.9) 0%, rgba(0,0,0,0) 70%);
+    }
+    .gradient-text { background: linear-gradient(90deg,#60a5fa, #a78bfa, #34d399); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .btn {
+      @apply px-4 py-2 rounded-xl font-medium border border-white/10 hover:border-white/20 transition-colors;
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.02));
+    }
+    .btn-primary { background: linear-gradient(180deg, rgba(79,130,255,.25), rgba(79,130,255,.15)); box-shadow: 0 8px 30px rgba(79,130,255,.25) }
+    .badge { @apply px-3 py-1 rounded-full text-xs border border-white/10 bg-white/5; }
+  </style>
+</head>
+<body class="font-sans text-white selection:bg-brand-500 selection:text-white">
+  <!-- Background orbs -->
+  <div class="fixed inset-0 -z-10">
+    <div class="absolute -top-24 -left-24 w-[40vw] h-[40vw] rounded-full blur-3xl opacity-40"
+      style="background: radial-gradient(circle at 30% 30%, rgba(79,130,255,.35), transparent 60%);"></div>
+    <div class="absolute -bottom-24 -right-24 w-[40vw] h-[40vw] rounded-full blur-3xl opacity-30"
+      style="background: radial-gradient(circle at 70% 70%, rgba(52,211,153,.35), transparent 60%);"></div>
+    <div class="absolute inset-0 gridline"></div>
+  </div>
+
+  <!-- NAV -->
+  <header class="sticky top-0 z-40">
+    <div class="mx-auto max-w-7xl px-4">
+      <nav class="glass mt-4 flex items-center justify-between rounded-2xl px-4 py-3 shadow-soft">
+        <a href="#" class="flex items-center gap-3">
+          <div class="h-9 w-9 rounded-xl bg-gradient-to-br from-brand-400 to-emerald-400 shadow-glow grid place-items-center">
+            <i data-lucide="flame" class="w-5 h-5"></i>
+          </div>
+          <span class="font-display text-lg tracking-wide">swagcoder</span>
+        </a>
+        <div class="hidden md:flex items-center gap-2">
+          <a class="btn" href="#projects">Projects</a>
+          <a class="btn" href="#experience">Experience</a>
+          <a class="btn" href="#skills">Skills</a>
+          <a class="btn" href="#contact">Contact</a>
+          <button id="themeBtn" class="btn btn-primary flex items-center gap-2"><i data-lucide="sparkles" class="w-4 h-4"></i><span>Claim Daily XP</span></button>
+        </div>
+        <button class="md:hidden btn" id="menuBtn"><i data-lucide="menu" class="w-5 h-5"></i></button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="relative mx-auto max-w-7xl px-4 pt-12 md:pt-20">
+    <div class="flex flex-col items-center text-center gap-8">
+      <div class="relative">
+        <div class="absolute inset-0 -z-10 blur-2xl opacity-60 rounded-full" style="background: conic-gradient(from 0deg,#60a5fa, #a78bfa, #34d399, #60a5fa)"></div>
+        <div class="relative grid place-items-center rounded-3xl border border-white/10 bg-white/5 px-6 py-3 text-xs md:text-sm uppercase tracking-widest">
+          <span class="opacity-80">Full‑Stack & GenAI • PwC / TCS</span>
+        </div>
+      </div>
+      <h1 class="font-display text-4xl md:text-6xl leading-tight">
+        Rishav Chatterjee <span class="gradient-text">builds premium AI‑powered apps</span> with swagger.
+      </h1>
+      <p class="max-w-2xl text-white/80 text-lg">
+        Full Stack Gen AI Developer — 3+ years at PwC & TCS. Delivered 100+ GenAI POCs influencing $600M+ in deals. Passion for performance, clean UI, and real‑world impact.
+      </p>
+      <div class="flex flex-wrap items-center justify-center gap-3">
+        <a class="btn btn-primary flex items-center gap-2" href="mailto:crishav01@gmail.com"><i data-lucide="send" class="w-4 h-4"></i>Hire Me</a>
+        <a class="btn flex items-center gap-2" href="https://linkedin.com/in/rishav-chatterjee-fsd/" target="_blank" rel="noopener"><i data-lucide="linkedin" class="w-4 h-4"></i>LinkedIn</a>
+        <a class="btn flex items-center gap-2" href="https://rishav-chatterjee-devfolio.web.app/" target="_blank" rel="noopener"><i data-lucide="globe" class="w-4 h-4"></i>Portfolio</a>
+        <a class="btn flex items-center gap-2" href="#quests"><i data-lucide="trophy" class="w-4 h-4"></i>Quests</a>
+      </div>
+
+      <!-- GAMIFICATION PANEL -->
+      <div class="glass card-3d mt-8 w-full max-w-3xl rounded-3xl p-6 shadow-soft tilt" id="gamifyCard">
+        <div class="flex flex-col md:flex-row items-center md:items-start gap-6">
+          <div class="relative">
+            <svg width="120" height="120" viewBox="0 0 120 120" class="animate-float">
+              <defs>
+                <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#60a5fa"></stop>
+                  <stop offset="50%" stop-color="#a78bfa"></stop>
+                  <stop offset="100%" stop-color="#34d399"></stop>
+                </linearGradient>
+              </defs>
+              <circle cx="60" cy="60" r="54" stroke="url(#grad)" stroke-width="12" fill="none" opacity="0.35"></circle>
+              <circle id="xpRing" cx="60" cy="60" r="54" stroke="url(#grad)" stroke-width="12" stroke-linecap="round" fill="none"
+                stroke-dasharray="339.292" stroke-dashoffset="0" style="transform: rotate(-90deg); transform-origin: 50% 50%;"></circle>
+              <text id="levelText" x="60" y="66" text-anchor="middle" fill="#fff" font-family="Space Grotesk" font-size="28" font-weight="700">L1</text>
+            </svg>
+          </div>
+          <div class="flex-1 text-left">
+            <div class="flex items-center justify-between">
+              <h3 class="font-display text-2xl">Your Creator Score</h3>
+              <span id="xpLabel" class="badge">0 / 200 XP</span>
+            </div>
+            <p class="mt-2 text-white/80">Earn XP while exploring. Complete quests, open projects, copy my email, or book a call. Level up to unlock easter‑eggs 🎁</p>
+            <div class="mt-4 flex flex-wrap gap-2">
+              <span class="badge">Frontend</span>
+              <span class="badge">GenAI</span>
+              <span class="badge">RAG</span>
+              <span class="badge">Node/Nest</span>
+              <span class="badge">Angular/React</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects" class="mx-auto max-w-7xl px-4 pt-20">
+    <div class="flex items-end justify-between">
+      <h2 class="font-display text-3xl md:text-4xl">Signature Projects</h2>
+      <a class="text-white/70 hover:text-white underline-offset-4 hover:underline" href="https://github.com/rishav-learnerml" target="_blank">More on GitHub</a>
+    </div>
+    <div class="mt-8 grid gap-6 md:grid-cols-2">
+      <!-- Prime GPT -->
+      <article class="glass rounded-3xl p-6 shadow-soft card-3d tilt" data-xp="40">
+        <div class="flex items-center justify-between">
+          <h3 class="font-display text-2xl">Prime GPT</h3>
+          <span class="badge">React • Tailwind • OpenAI</span>
+        </div>
+        <p class="mt-2 text-white/80">A GPT‑powered movie trailer platform with personalized recommendations, Firebase Auth, and multi‑language support. 33% perf boost with lazy loading.</p>
+        <div class="mt-4 flex flex-wrap gap-2">
+          <a class="btn btn-primary" target="_blank" rel="noopener" href="https://prime-gpt.web.app/browse">Live</a>
+          <a class="btn" target="_blank" rel="noopener" href="https://github.com/rishav-learnerml/prime-gpt">Code</a>
+          <a class="btn" target="_blank" rel="noopener" href="https://youtu.be/CN3HRt9EeOw">Demo</a>
+        </div>
+      </article>
+      <!-- Threads 2.0 -->
+      <article class="glass rounded-3xl p-6 shadow-soft card-3d tilt" data-xp="50">
+        <div class="flex items-center justify-between">
+          <h3 class="font-display text-2xl">Threads 2.0</h3>
+          <span class="badge">Angular • NestJS • Gemini</span>
+        </div>
+        <p class="mt-2 text-white/80">Anonymous, AI‑powered social platform inspired by Threads. Zero‑login micro‑posting with AI prompts. Frontend on Vercel, backend on Render.</p>
+        <div class="mt-4 flex flex-wrap gap-2">
+          <a class="btn btn-primary" target="_blank" rel="noopener" href="https://threads-app-drab-eight.vercel.app">Live</a>
+          <a class="btn" target="_blank" rel="noopener" href="https://github.com/rishav-learnerml/threads-app">Code</a>
+          <a class="btn" target="_blank" rel="noopener" href="https://www.linkedin.com/posts/rishav-chatterjee-fsd_socialmedia-anonymousapp-ai-activity-7352955521114533889-VzB6?utm_source=share&utm_medium=member_desktop">Post</a>
+        </div>
+      </article>
+      <!-- Corona Predictor -->
+      <article class="glass rounded-3xl p-6 shadow-soft card-3d tilt" data-xp="25">
+        <div class="flex items-center justify-between">
+          <h3 class="font-display text-2xl">Corona Outcome Predictor</h3>
+          <span class="badge">Python • FB Prophet</span>
+        </div>
+        <p class="mt-2 text-white/80">Forecasting COVID‑19 trends with 97% accuracy via time‑series modelling. 25+ charts to visualize insights.</p>
+        <div class="mt-4 flex flex-wrap gap-2">
+          <a class="btn btn-primary" target="_blank" rel="noopener" href="https://rb.gy/pjhgue">Live</a>
+        </div>
+      </article>
+      <!-- CO2 Tracker -->
+      <article class="glass rounded-3xl p-6 shadow-soft card-3d tilt" data-xp="35">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <h3 class="font-display text-2xl">Cloud CO₂ Tracker</h3>
+            <span class="badge">PwC</span>
+          </div>
+          <span class="badge">React • Node • Python</span>
+        </div>
+        <p class="mt-2 text-white/80">Collaborated with a leading Cloud Provider to track CO₂ emissions across workloads, targeting a 60% reduction in carbon footprint.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience" class="mx-auto max-w-7xl px-4 pt-20">
+    <h2 class="font-display text-3xl md:text-4xl">Experience</h2>
+    <div class="mt-8 grid gap-6 md:grid-cols-2">
+      <div class="glass rounded-3xl p-6 shadow-soft">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="font-display text-2xl">PwC India</h3>
+            <p class="text-white/70">Generative AI Developer • Jun 2025 – Present • Kolkata</p>
+          </div>
+          <span class="badge">Advisory</span>
+        </div>
+        <ul class="mt-3 space-y-2 text-white/80">
+          <li>• Internal GenAI assistant using LangChain, OpenAI & ChromaDB for document search and summarization.</li>
+          <li>• Custom embeddings and prompt tuning for audit reports → +40% retrieval relevance.</li>
+          <li>• Exploring automation in risk, compliance & financial reporting.</li>
+        </ul>
+      </div>
+      <div class="glass rounded-3xl p-6 shadow-soft">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="font-display text-2xl">TCS Innovations Lab</h3>
+            <p class="text-white/70">Senior Full Stack Developer • Jul 2022 – Jun 2025 • Kolkata</p>
+          </div>
+          <span class="badge">R&I</span>
+        </div>
+        <ul class="mt-3 space-y-2 text-white/80">
+          <li>• Built 5 full‑stack GenAI apps & 100+ rapid POCs to support $600M+ proposals.</li>
+          <li>• Agile sprints, mentored 6+ junior devs.</li>
+          <li>• React/Node/Python platform to track cloud CO₂ footprint.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills" class="mx-auto max-w-7xl px-4 pt-20">
+    <h2 class="font-display text-3xl md:text-4xl">Stack & Superpowers</h2>
+    <div class="mt-8 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div class="glass rounded-2xl p-4">
+        <h4 class="font-medium">Frontend</h4>
+        <p class="text-white/70 text-sm mt-1">React, Angular, Next, Redux, Tailwind, MUI</p>
+      </div>
+      <div class="glass rounded-2xl p-4">
+        <h4 class="font-medium">Backend</h4>
+        <p class="text-white/70 text-sm mt-1">Node, NestJS, Express, Flask, FastAPI</p>
+      </div>
+      <div class="glass rounded-2xl p-4">
+        <h4 class="font-medium">GenAI/ML</h4>
+        <p class="text-white/70 text-sm mt-1">RAG, Agentic AI, LLMOps, Deep Learning</p>
+      </div>
+      <div class="glass rounded-2xl p-4">
+        <h4 class="font-medium">Data & DB</h4>
+        <p class="text-white/70 text-sm mt-1">MongoDB, Postgres, MySQL, Prisma, NeonDB</p>
+      </div>
+      <div class="glass rounded-2xl p-4">
+        <h4 class="font-medium">DevOps/Cloud</h4>
+        <p class="text-white/70 text-sm mt-1">AWS, Azure, CI/CD, Docker, K8s</p>
+      </div>
+      <div class="glass rounded-2xl p-4">
+        <h4 class="font-medium">Tooling</h4>
+        <p class="text-white/70 text-sm mt-1">Git, Vite, ESLint, Webpack, Prettier, Figma</p>
+      </div>
+      <div class="glass rounded-2xl p-4">
+        <h4 class="font-medium">Achievements</h4>
+        <p class="text-white/70 text-sm mt-1">Global Rank 9 — CodeChef, 5★ on Python/Java/JS/C++</p>
+      </div>
+      <div class="glass rounded-2xl p-4">
+        <h4 class="font-medium">Education & Certs</h4>
+        <p class="text-white/70 text-sm mt-1">B.Tech IT (9.22 CGPA), Meta Frontend, DeepLearning.AI</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUESTS -->
+  <section id="quests" class="mx-auto max-w-7xl px-4 pt-20">
+    <div class="flex items-end justify-between">
+      <h2 class="font-display text-3xl md:text-4xl">Quests</h2>
+      <span class="text-white/70 text-sm">Complete actions to earn XP</span>
+    </div>
+    <div class="mt-6 grid gap-4 md:grid-cols-2">
+      <div class="glass rounded-2xl p-5 flex items-center justify-between">
+        <div>
+          <h4 class="font-medium">Visit LinkedIn</h4>
+          <p class="text-white/70 text-sm">Open my latest posts and say hi 👋</p>
+        </div>
+        <a class="btn btn-primary" target="_blank" rel="noopener" data-quest="linkedin" href="https://linkedin.com/in/rishav-chatterjee-fsd/">+30 XP</a>
+      </div>
+      <div class="glass rounded-2xl p-5 flex items-center justify-between">
+        <div>
+          <h4 class="font-medium">Open a Live Project</h4>
+          <p class="text-white/70 text-sm">Explore Prime GPT or Threads 2.0</p>
+        </div>
+        <a class="btn btn-primary" target="_blank" rel="noopener" data-quest="project" href="https://prime-gpt.web.app/browse">+40 XP</a>
+      </div>
+      <div class="glass rounded-2xl p-5 flex items-center justify-between">
+        <div>
+          <h4 class="font-medium">Copy Email</h4>
+          <p class="text-white/70 text-sm">Reach out for collabs & roles</p>
+        </div>
+        <button class="btn btn-primary" data-quest="email" id="copyEmail">+20 XP</button>
+      </div>
+      <div class="glass rounded-2xl p-5 flex items-center justify-between">
+        <div>
+          <h4 class="font-medium">Daily Check‑in</h4>
+          <p class="text-white/70 text-sm">Claim once every 24 hours</p>
+        </div>
+        <button class="btn btn-primary" data-quest="daily" id="dailyXp">+25 XP</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT / CTA -->
+  <section id="contact" class="mx-auto max-w-7xl px-4 pt-20 pb-24">
+    <div class="glass rounded-3xl p-8 shadow-soft">
+      <div class="flex flex-col md:flex-row items-center md:items-start gap-6">
+        <div class="flex-1">
+          <h2 class="font-display text-3xl md:text-4xl">Let’s build something delightful.</h2>
+          <p class="mt-2 text-white/80">Kolkata, India • Open to roles and collabs. Prefer clean UI, strong engineering, and shipping fast.</p>
+          <div class="mt-4 flex flex-wrap gap-3">
+            <button class="btn flex items-center gap-2" id="copyEmail2"><i data-lucide="copy" class="w-4 h-4"></i>Copy Email</button>
+            <a class="btn" target="_blank" rel="noopener" href="https://leetcode.com/u/rishav_learner/">LeetCode</a>
+            <a class="btn" target="_blank" rel="noopener" href="https://www.codechef.com/users/rishav_learner/">CodeChef</a>
+            <a class="btn" target="_blank" rel="noopener" href="https://rishav-chatterjee-devfolio.web.app/">Portfolio</a>
+          </div>
+        </div>
+        <div class="w-full md:w-auto">
+          <div class="rounded-2xl border border-white/10 p-4">
+            <div class="flex items-center gap-3">
+              <i data-lucide="award" class="w-6 h-6"></i>
+              <div>
+                <div class="font-medium">Creator Perks</div>
+                <div class="text-white/70 text-sm">Unlock badges at L3 & L5</div>
+              </div>
+            </div>
+            <div class="mt-4 flex gap-2">
+              <span id="badgeL3" class="badge opacity-30">L3 — Silver</span>
+              <span id="badgeL5" class="badge opacity-30">L5 — Gold</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="pb-10">
+    <p class="text-center text-white/60 text-sm">© <span id="year"></span> swagcoder • Made with good vibes.</p>
+  </footer>
+
+  <script>
+    // Icons
+    window.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+      document.getElementById('year').textContent = new Date().getFullYear();
+    });
+
+    // 3D tilt
+    document.querySelectorAll('.tilt').forEach((el) => {
+      el.addEventListener('mousemove', (e) => {
+        const rect = el.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const rx = ((y / rect.height) - 0.5) * -10; // rotateX
+        const ry = ((x / rect.width) - 0.5) * 10;  // rotateY
+        el.style.setProperty('--rx', rx + 'deg');
+        el.style.setProperty('--ry', ry + 'deg');
+      });
+      el.addEventListener('mouseleave', () => {
+        el.style.setProperty('--rx', '0deg');
+        el.style.setProperty('--ry', '0deg');
+      });
+    });
+
+    // Gamification state
+    const XP_PER_LEVEL = 200;
+    const store = {
+      get: () => {
+        try { return JSON.parse(localStorage.getItem('swag-state') || '{}'); } catch { return {}; }
+      },
+      set: (data) => localStorage.setItem('swag-state', JSON.stringify(data)),
+      patch: (patch) => store.set({ ...store.get(), ...patch })
+    };
+
+    function addXP(amount, reason='') {
+      const s = store.get();
+      const now = Date.now();
+      const xp = Math.min((s.xp || 0) + amount, 9999);
+      const level = Math.max(1, Math.floor(xp / XP_PER_LEVEL) + 1);
+      store.patch({ xp, level, last: now });
+      drawXP();
+      burst();
+      toast(`+${amount} XP` + (reason ? ` — ${reason}` : ''));
+      maybeUnlock(level);
+    }
+
+    function maybeUnlock(level) {
+      const b3 = document.getElementById('badgeL3');
+      const b5 = document.getElementById('badgeL5');
+      if (level >= 3) b3.classList.remove('opacity-30');
+      if (level >= 5) b5.classList.remove('opacity-30');
+    }
+
+    function drawXP() {
+      const s = store.get();
+      const xp = s.xp || 0;
+      const level = Math.max(1, Math.floor(xp / XP_PER_LEVEL) + 1);
+      const ring = document.getElementById('xpRing');
+      const label = document.getElementById('xpLabel');
+      const levelText = document.getElementById('levelText');
+      const circumference = 2 * Math.PI * 54;
+      const progress = (xp % XP_PER_LEVEL) / XP_PER_LEVEL;
+      ring.style.strokeDasharray = circumference.toFixed(3);
+      ring.style.strokeDashoffset = (circumference * (1 - progress)).toFixed(3);
+      label.textContent = `${xp % XP_PER_LEVEL} / ${XP_PER_LEVEL} XP`;
+      levelText.textContent = 'L' + level;
+      maybeUnlock(level);
+    }
+
+    // Quests
+    const quests = {
+      linkedin: { key: 'q_linkedin', xp: 30 },
+      project:  { key: 'q_project',  xp: 40 },
+      email:    { key: 'q_email',    xp: 20 },
+      daily:    { key: 'q_daily',    xp: 25, ttl: 24*60*60*1000 }
+    };
+
+    function completeQuest(q) {
+      const s = store.get();
+      const now = Date.now();
+      const done = s[q.key];
+      if (!q.ttl && done) return toast('Already claimed');
+      if (q.ttl && done && (now - done) < q.ttl) return toast('Come back tomorrow ✨');
+      store.patch({ [q.key]: now });
+      addXP(q.xp, 'Quest completed');
+    }
+
+    document.querySelectorAll('[data-quest]').forEach((el) => {
+      el.addEventListener('click', (ev) => {
+        const type = el.getAttribute('data-quest');
+        const q = quests[type];
+        if (!q) return;
+        completeQuest(q);
+      });
+    });
+
+    // Copy email
+    function copyEmail() {
+      navigator.clipboard.writeText('crishav01@gmail.com').then(() => {
+        completeQuest(quests.email);
+        toast('Email copied');
+      });
+    }
+    document.getElementById('copyEmail').addEventListener('click', copyEmail);
+    document.getElementById('copyEmail2').addEventListener('click', copyEmail);
+
+    // Daily
+    document.getElementById('dailyXp').addEventListener('click', () => completeQuest(quests.daily));
+    document.getElementById('themeBtn').addEventListener('click', () => completeQuest(quests.daily));
+
+    // Confetti
+    function burst() {
+      try {
+        confetti({
+          particleCount: 80,
+          startVelocity: 30,
+          spread: 360,
+          ticks: 120,
+          scalar: 0.8,
+          origin: { y: 0.3 }
+        });
+      } catch {}
+    }
+
+    // Toast (very tiny)
+    const toastBox = document.createElement('div');
+    toastBox.className = 'fixed top-4 right-4 z-[1000] space-y-2';
+    document.body.appendChild(toastBox);
+    function toast(msg) {
+      const el = document.createElement('div');
+      el.className = 'glass rounded-xl px-4 py-2 shadow-soft text-sm';
+      el.textContent = msg;
+      toastBox.appendChild(el);
+      setTimeout(() => el.remove(), 2500);
+    }
+
+    // Init
+    drawXP();
+  </script>
+</body>
+</html>
